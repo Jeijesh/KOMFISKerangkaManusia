@@ -1,134 +1,235 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kerangka 3D Interaktif</title>
-  <style>
-    body { margin: 0; overflow: hidden; background-color: #f0f0f0; font-family: Arial; }
-    #info {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(0,0,0,0.6);
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 5px;
-      font-size: 1em;
-      z-index: 10;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kerangka 3D Interaktif</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  display: flex;
+  height: 100vh;
+  background: url('./background.png') no-repeat center center fixed;
+  background-size: 100% 100%;
+}
 
-  <!-- Import Map -->
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
-      "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/loaders/GLTFLoader.js",
-      "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/controls/OrbitControls.js"
-    }
+/* Container kiri untuk 3D */
+#canvas-container {
+  flex: 8; /* 80% lebar */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Judul di kiri atas */
+#left-title {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #fff;
+  font-size: 2.5em;
+  font-weight: bold;
+  background: rgba(0,0,0,0.5);
+  padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 5;
+}
+
+/* Petunjuk kontrol di kiri bawah */
+#controls-info {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #fff;
+  background: rgba(0,0,0,0.5);
+  padding: 8px 10px;
+  border-radius: 5px;
+  font-size: 0.9em;
+  z-index: 5;
+}
+
+/* Panel kanan untuk funfact */
+#info-panel {
+  flex: 2; /* 20% lebar */
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+#info-panel h2 {
+  margin-top: 0;
+  font-size: 1.2em;
+}
+
+#info-panel p {
+  font-size: 1em;
+  line-height: 1.4;
+}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+    "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/loaders/GLTFLoader.js",
+    "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/controls/OrbitControls.js"
   }
-  </script>
+}
+</script>
 </head>
 <body>
-  <div id="info">Klik bagian tulang untuk info</div>
+<div id="canvas-container">
+  <div id="left-title">Kerangka Tubuh Manusia</div>
+  <div id="controls-info">
+    Kontrol: <br>
+    - Geser mouse untuk putar <br>
+    - Scroll untuk zoom <br>
+    - Klik tulang untuk info <br>
+    - ESC untuk reset highlight
+  </div>
+</div>
 
-  <script type="module">
-    import * as THREE from 'three';
-    import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+<div id="info-panel">
+  <h2>Fun Fact Tulang</h2>
+  <p>Klik bagian tulang untuk info</p>
+</div>
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
-    camera.position.set(0,1.5,3);
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-    const renderer = new THREE.WebGLRenderer({antialias:true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+camera.position.set(0,1.5,3);
 
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.target.set(0,1,0);
-    controls.update();
+const canvasContainer = document.getElementById('canvas-container');
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputEncoding = THREE.sRGBEncoding;
+canvasContainer.appendChild(renderer.domElement);
 
-    scene.add(new THREE.AmbientLight(0xffffff,0.6));
-    const dirLight = new THREE.DirectionalLight(0xffffff,1);
-    dirLight.position.set(5,5,5);
-    scene.add(dirLight);
+// Controls
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.target.set(0,1,0);
+controls.update();
 
-    // Load kerangka
-    const loader = new GLTFLoader();
-    let modelRoot;
-    loader.load(
-      './kerangka.glb',
-      gltf=>{
-        modelRoot = gltf.scene;
-        modelRoot.position.set(0,-1,0);
-        scene.add(modelRoot);
-      },
-      undefined,
-      err=>console.error(err)
-    );
+// Lights
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.8);
+hemiLight.position.set(0, 20, 0);
+scene.add(hemiLight);
 
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
-    const info = document.getElementById('info');
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+dirLight.position.set(5, 10, 7.5);
+dirLight.castShadow = true;
+scene.add(dirLight);
 
-    let highlightedMesh = null;
-    let originalMaterial = null;
+const rimPositions = [
+  [3, 2, 2], [-3, 2, 2], [3, 2, -2], [-3, 2, -2]
+];
+rimPositions.forEach(pos => {
+  const rim = new THREE.DirectionalLight(0xffffff, 0.8);
+  rim.position.set(...pos);
+  scene.add(rim);
+});
 
-    function onClick(event){
-      mouse.x = (event.clientX / window.innerWidth)*2-1;
-      mouse.y = -(event.clientY / window.innerHeight)*2+1;
-      raycaster.setFromCamera(mouse,camera);
+// Load model
+const loader = new GLTFLoader();
+let modelRoot;
+loader.load('./kerangka.glb', gltf => {
+  modelRoot = gltf.scene;
+  modelRoot.position.set(0,-1,0);
+  scene.add(modelRoot);
 
-      const intersects = raycaster.intersectObjects(scene.children, true);
-      if(intersects.length>0){
-        const mesh = intersects[0].object;
-        if(!mesh.isMesh) return;
+  modelRoot.traverse(node => {
+    if(node.isMesh) console.log(node.name);
+  });
+});
 
-        // reset highlight sebelumnya
-        if(highlightedMesh){
-          highlightedMesh.material.dispose();
-          highlightedMesh.material = originalMaterial;
-        }
+// Messages
+const messages = {
+  "Rahang_Bawah": {name:"Rahang Bawah", funfact:"Rahang bawah adalah tulang kuat yang berfungsi untuk menggigit dan mengunyah makanan."},
+  "Tengkorak": {name:"Tengkorak", funfact:"Tengkorak melindungi otak dan membentuk struktur wajah."},
+  "Tulang_Belakang": {name:"Tulang Belakang", funfact:"Tulang belakang menopang tubuh dan melindungi sumsum tulang belakang."},
+  "Tulang_Belikat": {name:"Tulang Belikat", funfact:"Tulang belikat menghubungkan lengan dengan tubuh."},
+  "Tulang_Betis": {name:"Tulang Betis", funfact:"Tulang betis menopang berat tubuh dan membantu keseimbangan."},
+  "Tulang_Hasta": {name:"Tulang Hasta", funfact:"Tulang hasta memungkinkan pergerakan lengan bawah dan pergelangan tangan."},
+  "Tulang_Jari_Kaki": {name:"Tulang Jari Kaki", funfact:"Tulang jari kaki mendukung keseimbangan dan membantu berjalan."},
+  "Tulang_Jari_Tangan": {name:"Tulang Jari Tangan", funfact:"Tulang jari tangan memungkinkan gerakan presisi dan memegang benda."},
+  "Tulang_Kering": {name:"Tulang Kering", funfact:"Tulang kering menopang tubuh dan menjaga kestabilan saat bergerak."},
+  "Tulang_Leher": {name:"Tulang Leher", funfact:"Tulang leher mendukung kepala dan memungkinkan rotasi."},
+  "Tulang_Lengan_Atas": {name:"Tulang Lengan Atas", funfact:"Tulang lengan atas menghubungkan bahu dan siku."},
+  "Tulang_Paha": {name:"Tulang Paha", funfact:"Tulang paha adalah tulang terpanjang yang menopang tubuh."},
+  "Tulang_Panggul": {name:"Tulang Panggul" , funfact:"Tulang panggul menopang tubuh bagian atas dan menahan organ dalam."},
+  "Tulang_Pengumpil": {name:"Tulang Pengumpil", funfact:"Tulang pengumpil memungkinkan rotasi lengan bawah."},
+  "Tulang_Pergelangan_Kaki": {name:"Tulang Pergelangan Kaki", funfact:"Tulang pergelangan kaki memungkinkan gerakan fleksibel sambil menopang tubuh."},
+  "Tulang_Rusuk": {name:"Tulang Rusuk", funfact:"Tulang rusuk melindungi jantung dan paru-paru."},
+  "Tulang_Selangka": {name:"Tulang Selangka", funfact:"Tulang selangka menghubungkan lengan dengan tubuh."},
+  "Tulang_Telapak_Tangan": {name:"Tulang Telapak Tangan", funfact:"Tulang telapak tangan mendukung gerakan jari dan pegangan tangan."},
+  "Tulang_Tempurung_Lutut": {name:"Tulang Tempurung Lutut", funfact:"Tulang tempurung lutut melindungi sendi lutut."}
+};
 
-        // clone material baru untuk highlight
-        originalMaterial = mesh.material;
-        mesh.material = mesh.material.clone();
-        mesh.material.color.set(0x00ffff);
-        highlightedMesh = mesh;
+// Raycaster
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const infoPanel = document.getElementById('info-panel');
+let highlightedMesh = null;
+let originalMaterial = null;
 
-        // update info kanan atas
-        info.textContent = `Bagian: ${mesh.name || 'tidak bernama'}`;
-      }
+function onClick(event){
+  mouse.x = (event.clientX / window.innerWidth)*2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight)*2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObjects(scene.children, true);
+  if(intersects.length>0){
+    const mesh = intersects[0].object;
+    if(!mesh.isMesh) return;
+
+    if(highlightedMesh){
+      highlightedMesh.material.dispose();
+      highlightedMesh.material = originalMaterial;
     }
-    window.addEventListener('click', onClick);
+    originalMaterial = mesh.material;
+    mesh.material = mesh.material.clone();
+    mesh.material.color.set(0xffff00);
+    highlightedMesh = mesh;
 
-    // Escape untuk reset highlight
-    window.addEventListener('keydown', e=>{
-      if(e.key==='Escape' && highlightedMesh){
-        highlightedMesh.material.dispose();
-        highlightedMesh.material = originalMaterial;
-        highlightedMesh = null;
-        originalMaterial = null;
-        info.textContent = 'Klik bagian tulang untuk info';
-      }
-    });
-
-    window.addEventListener('resize', ()=>{
-      camera.aspect = window.innerWidth/window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    function animate(){
-      requestAnimationFrame(animate);
-      controls.update();
-      renderer.render(scene,camera);
+    const msg = messages[mesh.name];
+    if(msg){
+      infoPanel.innerHTML = `<h2>${msg.name}</h2><p>${msg.funfact}</p>`;
+    } else {
+      infoPanel.innerHTML = `<h2>${mesh.name || 'Tidak bernama'}</h2><p>-</p>`;
     }
-    animate();
-  </script>
+  }
+}
+
+window.addEventListener('click', onClick);
+
+window.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && highlightedMesh){
+    highlightedMesh.material.dispose();
+    highlightedMesh.material = originalMaterial;
+    highlightedMesh = null;
+    originalMaterial = null;
+    infoPanel.innerHTML = '<h2>Fun Fact Tulang</h2><p>Klik bagian tulang untuk info</p>';
+  }
+});
+
+window.addEventListener('resize', ()=>{
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+function animate(){
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene,camera);
+}
+animate();
+</script>
 </body>
 </html>
