@@ -4,14 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kerangka 3D Interaktif</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
 <style>
 body {
   margin: 0;
-  font-family: Arial;
+  font-family: 'Fredoka', Arial, sans-serif;
   display: flex;
   height: 100vh;
-  background: url('./background.png') no-repeat center center fixed;
-  background-size: 100% 100%;
+  background: linear-gradient(135deg, rgba(84,141,255,0.35), rgba(255,183,77,0.25)) no-repeat fixed, url('./background.png') no-repeat center center fixed;
+  background-size: cover;
 }
 
 /* Container kiri untuk 3D */
@@ -19,6 +22,9 @@ body {
   flex: 8; /* 80% lebar */
   position: relative;
   overflow: hidden;
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.25);
 }
 
 /* Judul di kiri atas */
@@ -33,6 +39,8 @@ body {
   padding: 5px 10px;
   border-radius: 5px;
   z-index: 5;
+  letter-spacing: 1px;
+  text-shadow: 0 3px 12px rgba(0,0,0,0.45);
 }
 
 /* Petunjuk kontrol di kiri bawah */
@@ -43,28 +51,56 @@ body {
   color: #fff;
   background: rgba(0,0,0,0.5);
   padding: 8px 10px;
-  border-radius: 5px;
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
   font-size: 0.9em;
   z-index: 5;
+}
+
+#controls-info::before {
+  content: "🕹️ ";
+  font-size: 1.1em;
 }
 
 /* Panel kanan untuk funfact */
 #info-panel {
   flex: 2; /* 20% lebar */
-  background: rgba(0,0,0,0.7);
+  background: linear-gradient(180deg, rgba(29,41,77,0.95), rgba(33,64,95,0.9));
   color: #fff;
-  padding: 20px;
+  padding: 28px 24px;
   overflow-y: auto;
+  border-radius: 24px 0 0 24px;
+  box-shadow: -10px 0 24px rgba(0,0,0,0.35);
 }
 
-#info-panel h2 {
-  margin-top: 0;
-  font-size: 1.2em;
+.info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: rgba(12, 28, 68, 0.65);
+  padding: 18px 20px;
+  border-radius: 18px;
+  box-shadow: inset 0 0 12px rgba(255,255,255,0.05);
 }
-
-#info-panel p {
-  font-size: 1em;
-  line-height: 1.4;
+.info-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.3em;
+  color: #ffd166;
+}
+.info-card p {
+  margin: 0;
+  font-size: 1.05em;
+  line-height: 1.7;
+  color: #f4f7ff;
+}
+.info-icon {
+  font-size: 2.2em;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.35));
+}
+.info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 </style>
 <script type="importmap">
@@ -144,7 +180,12 @@ loader.load('./kerangka.glb', gltf => {
   scene.add(modelRoot);
 
   modelRoot.traverse(node => {
-    if(node.isMesh) console.log(node.name);
+    if(node.isMesh){
+      if (!node.userData.originalScale) {
+        node.userData.originalScale = node.scale.clone();
+      }
+      console.log(node.name);
+    }
   });
 });
 
@@ -175,46 +216,125 @@ const messages = {
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 const infoPanel = document.getElementById('info-panel');
+const defaultInfo = {
+  title: 'Pilih Tulang Favoritmu!',
+  text: '🖱️ Klik bagian tubuh untuk melihat fakta tulang yang seru.'
+};
 let highlightedMesh = null;
-let originalMaterial = null;
+let previousMaterial = null;
+let pulsingMesh = null;
+const focusState = {
+  active: false,
+  start: 0,
+  duration: 750,
+  fromCam: new THREE.Vector3(),
+  toCam: new THREE.Vector3(),
+  fromTarget: new THREE.Vector3(),
+  toTarget: new THREE.Vector3()
+};
+
+function disposeMaterial(mat) {
+  if (Array.isArray(mat)) {
+    mat.forEach(m => m.dispose());
+  } else {
+    mat.dispose();
+  }
+}
+
+function cloneHighlightedMaterial(mat) {
+  if (Array.isArray(mat)) {
+    return mat.map(cloneHighlightedMaterial);
+  }
+  const clone = mat.clone();
+  if (clone.color) clone.color.set(0xffff66);
+  if (clone.emissive) clone.emissive.setHex(0x333300);
+  return clone;
+}
+
+function renderInfoPanel(title, fact) {
+  infoPanel.innerHTML = `
+    <div class="info-card">
+      <div class="info-icon">🦴</div>
+      <div class="info-text">
+        <h2>${title}</h2>
+        <p>${fact}</p>
+      </div>
+    </div>
+  `;
+}
+
+function resetHighlight() {
+  if (!highlightedMesh) {
+    renderInfoPanel(defaultInfo.title, defaultInfo.text);
+    return;
+  }
+  if (previousMaterial) {
+    disposeMaterial(highlightedMesh.material);
+    highlightedMesh.material = previousMaterial;
+  }
+  if (highlightedMesh.userData.originalScale) {
+    highlightedMesh.scale.copy(highlightedMesh.userData.originalScale);
+  }
+  highlightedMesh = null;
+  previousMaterial = null;
+  pulsingMesh = null;
+  renderInfoPanel(defaultInfo.title, defaultInfo.text);
+}
+
+function focusOnMesh(mesh) {
+  const box = new THREE.Box3().setFromObject(mesh);
+  const center = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3());
+  const radius = size.length() * 0.5;
+  const direction = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
+  const distance = THREE.MathUtils.clamp(radius * 1.4, 0.7, 2.2);
+  const newCameraPos = center.clone().add(direction.multiplyScalar(distance));
+
+  focusState.fromCam.copy(camera.position);
+  focusState.toCam.copy(newCameraPos);
+  focusState.fromTarget.copy(controls.target);
+  focusState.toTarget.copy(center);
+  focusState.start = performance.now();
+  focusState.active = true;
+}
+
+function highlightMesh(mesh) {
+  resetHighlight();
+  highlightedMesh = mesh;
+  previousMaterial = mesh.material;
+  mesh.material = cloneHighlightedMaterial(previousMaterial);
+  pulsingMesh = mesh;
+  mesh.userData.pulseStart = performance.now();
+
+  const msg = messages[mesh.name];
+  if (msg) {
+    renderInfoPanel(msg.name, `✨ ${msg.funfact}`);
+  } else {
+    renderInfoPanel(mesh.name || 'Tidak bernama', '✨ Belum ada fakta, tapi tulang ini tetap seru untuk dijelajahi!');
+  }
+
+  focusOnMesh(mesh);
+}
 
 function onClick(event){
+  if (!modelRoot) return;
   mouse.x = (event.clientX / window.innerWidth)*2 - 1;
   mouse.y = -(event.clientY / window.innerHeight)*2 + 1;
   raycaster.setFromCamera(mouse, camera);
 
-  const intersects = raycaster.intersectObjects(scene.children, true);
+  const intersects = raycaster.intersectObject(modelRoot, true);
   if(intersects.length>0){
     const mesh = intersects[0].object;
     if(!mesh.isMesh) return;
-
-    if(highlightedMesh){
-      highlightedMesh.material.dispose();
-      highlightedMesh.material = originalMaterial;
-    }
-    originalMaterial = mesh.material;
-    mesh.material = mesh.material.clone();
-    mesh.material.color.set(0xffff00);
-    highlightedMesh = mesh;
-
-    const msg = messages[mesh.name];
-    if(msg){
-      infoPanel.innerHTML = `<h2>${msg.name}</h2><p>${msg.funfact}</p>`;
-    } else {
-      infoPanel.innerHTML = `<h2>${mesh.name || 'Tidak bernama'}</h2><p>-</p>`;
-    }
+    highlightMesh(mesh);
   }
 }
 
 window.addEventListener('click', onClick);
 
 window.addEventListener('keydown', e=>{
-  if(e.key==='Escape' && highlightedMesh){
-    highlightedMesh.material.dispose();
-    highlightedMesh.material = originalMaterial;
-    highlightedMesh = null;
-    originalMaterial = null;
-    infoPanel.innerHTML = '<h2>Fun Fact Tulang</h2><p>Klik bagian tulang untuk info</p>';
+  if(e.key==='Escape'){
+    resetHighlight();
   }
 });
 
@@ -224,8 +344,32 @@ window.addEventListener('resize', ()=>{
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+renderInfoPanel(defaultInfo.title, defaultInfo.text);
+
 function animate(){
   requestAnimationFrame(animate);
+
+  if (focusState.active) {
+    const progress = Math.min((performance.now() - focusState.start) / focusState.duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    camera.position.lerpVectors(focusState.fromCam, focusState.toCam, eased);
+    controls.target.lerpVectors(focusState.fromTarget, focusState.toTarget, eased);
+    if (progress >= 1) {
+      focusState.active = false;
+    }
+  }
+
+  if (pulsingMesh && pulsingMesh.userData.originalScale) {
+    const elapsed = (performance.now() - pulsingMesh.userData.pulseStart) / 1000;
+    const factor = 1 + 0.05 * Math.sin(elapsed * Math.PI * 2);
+    const originalScale = pulsingMesh.userData.originalScale;
+    pulsingMesh.scale.set(
+      originalScale.x * factor,
+      originalScale.y * factor,
+      originalScale.z * factor
+    );
+  }
+
   controls.update();
   renderer.render(scene,camera);
 }
