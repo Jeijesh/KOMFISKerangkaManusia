@@ -1,0 +1,702 @@
+{
+  "figmaToJson": true,
+  "version": "1.0",
+  "project": {
+    "name": "Anti-Judi Simulator - Edukasi Bahaya Judi",
+    "description": "Aplikasi edukatif untuk menyadarkan masyarakat tentang bahaya judi online",
+    "dimensions": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "pages": [
+    {
+      "id": "main-pages",
+      "name": "Anti-Judi Simulator",
+      "frames": [
+        {
+          "id": "splash-screen",
+          "name": "🚨 Splash Screen",
+          "type": "FRAME",
+          "width": 390,
+          "height": 844,
+          "background": {
+            "type": "GRADIENT_LINEAR",
+            "gradientStops": [
+              {
+                "color": "rgba(214, 40, 40, 1)",
+                "position": 0
+              },
+              {
+                "color": "rgba(29, 53, 87, 1)",
+                "position": 1
+              }
+            ],
+            "gradientTransform": [[0, 1, 0], [-1, 0, 1]]
+          },
+          "children": [
+            {
+              "id": "warning-icon",
+              "name": "⚠️ Warning Icon",
+              "type": "TEXT",
+              "x": 145,
+              "y": 180,
+              "width": 100,
+              "height": 100,
+              "characters": "⚠️",
+              "fontSize": 80,
+              "fontName": {
+                "family": "Apple Color Emoji",
+                "style": "Regular"
+              },
+              "textAlignHorizontal": "CENTER"
+            },
+            {
+              "id": "main-title",
+              "name": "Main Title",
+              "type": "TEXT",
+              "x": 30,
+              "y": 320,
+              "width": 330,
+              "height": 120,
+              "characters": "STOP JUDI\nSebelum Terlambat!",
+              "fontSize": 28,
+              "fontName": {
+                "family": "Inter",
+                "style": "ExtraBold"
+              },
+              "fontWeight": 800,
+              "textAlignHorizontal": "CENTER",
+              "textAlignVertical": "CENTER",
+              "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1}}],
+              "lineHeight": {"unit": "PIXELS", "value": 36}
+            },
+            {
+              "id": "subtitle",
+              "name": "Subtitle",
+              "type": "TEXT",
+              "x": 40,
+              "y": 460,
+              "width": 310,
+              "height": 80,
+              "characters": "Pelajari risiko judi online dan cara melindungi diri dari jeratan hutang",
+              "fontSize": 16,
+              "fontName": {
+                "family": "Inter",
+                "style": "Medium"
+              },
+              "fontWeight": 500,
+              "textAlignHorizontal": "CENTER",
+              "fills": [{"type": "SOLID", "color": {"r": 0.95, "g": 0.95, "b": 0.95}}],
+              "lineHeight": {"unit": "PIXELS", "value": 22}
+            },
+            {
+              "id": "start-button",
+              "name": "Start Button",
+              "type": "FRAME",
+              "x": 70,
+              "y": 720,
+              "width": 250,
+              "height": 64,
+              "background": {
+                "type": "SOLID",
+                "color": {"r": 1, "g": 0.8, "b": 0}
+              },
+              "cornerRadius": 32,
+              "effects": [
+                {
+                  "type": "DROP_SHADOW",
+                  "color": {"r": 0, "g": 0, "b": 0, "a": 0.25},
+                  "offset": {"x": 0, "y": 4},
+                  "radius": 12
+                }
+              ],
+              "children": [
+                {
+                  "id": "start-text",
+                  "name": "Start Text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 250,
+                  "height": 64,
+                  "characters": "🎯 Mulai Belajar",
+                  "fontSize": 18,
+                  "fontName": {
+                    "family": "Inter",
+                    "style": "Bold"
+                  },
+                  "fontWeight": 700,
+                  "textAlignHorizontal": "CENTER",
+                  "textAlignVertical": "CENTER",
+                  "fills": [{"type": "SOLID", "color": {"r": 0.11, "g": 0.21, "b": 0.34}}]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dashboard",
+          "name": "🏠 Dashboard Utama",
+          "type": "FRAME",
+          "width": 390,
+          "height": 844,
+          "background": {
+            "type": "GRADIENT_LINEAR",
+            "gradientStops": [
+              {
+                "color": "rgba(248, 250, 253, 1)",
+                "position": 0
+              },
+              {
+                "color": "rgba(255, 255, 255, 1)",
+                "position": 1
+              }
+            ]
+          },
+          "children": [
+            {
+              "id": "header",
+              "name": "Header",
+              "type": "FRAME",
+              "x": 0,
+              "y": 0,
+              "width": 390,
+              "height": 120,
+              "background": {
+                "type": "SOLID",
+                "color": {"r": 1, "g": 1, "b": 1}
+              },
+              "effects": [
+                {
+                  "type": "DROP_SHADOW",
+                  "color": {"r": 0, "g": 0, "b": 0, "a": 0.08},
+                  "offset": {"x": 0, "y": 2},
+                  "radius": 8
+                }
+              ],
+              "children": [
+                {
+                  "id": "greeting",
+                  "name": "Greeting",
+                  "type": "TEXT",
+                  "x": 24,
+                  "y": 60,
+                  "width": 200,
+                  "height": 32,
+                  "characters": "Halo, Sobat Cerdas! 👋",
+                  "fontSize": 20,
+                  "fontName": {
+                    "family": "Inter",
+                    "style": "Bold"
+                  },
+                  "fontWeight": 700,
+                  "fills": [{"type": "SOLID", "color": {"r": 0.11, "g": 0.21, "b": 0.34}}]
+                },
+                {
+                  "id": "status-badge",
+                  "name": "Status Badge",
+                  "type": "FRAME",
+                  "x": 240,
+                  "y": 65,
+                  "width": 130,
+                  "height": 28,
+                  "background": {
+                    "type": "SOLID",
+                    "color": {"r": 0.85, "g": 0.95, "b": 0.85}
+                  },
+                  "cornerRadius": 14,
+                  "children": [
+                    {
+                      "id": "status-text",
+                      "name": "Status Text",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "width": 130,
+                      "height": 28,
+                      "characters": "🛡️ Terlindungi",
+                      "fontSize": 12,
+                      "fontName": {
+                        "family": "Inter",
+                        "style": "SemiBold"
+                      },
+                      "fontWeight": 600,
+                      "textAlignHorizontal": "CENTER",
+                      "textAlignVertical": "CENTER",
+                      "fills": [{"type": "SOLID", "color": {"r": 0.13, "g": 0.55, "b": 0.13}}]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "alert-card",
+              "name": "Alert Card",
+              "type": "FRAME",
+              "x": 24,
+              "y": 140,
+              "width": 342,
+              "height": 100,
+              "background": {
+                "type": "GRADIENT_LINEAR",
+                "gradientStops": [
+                  {
+                    "color": "rgba(255, 245, 245, 1)",
+                    "position": 0
+                  },
+                  {
+                    "color": "rgba(254, 226, 226, 1)",
+                    "position": 1
+                  }
+                ]
+              },
+              "cornerRadius": 16,
+              "strokeWeight": 2,
+              "strokes": [{"type": "SOLID", "color": {"r": 0.84, "g": 0.16, "b": 0.16}}],
+              "children": [
+                {
+                  "id": "alert-icon",
+                  "name": "Alert Icon",
+                  "type": "TEXT",
+                  "x": 20,
+                  "y": 20,
+                  "width": 40,
+                  "height": 40,
+                  "characters": "🚨",
+                  "fontSize": 32,
+                  "textAlignHorizontal": "CENTER",
+                  "textAlignVertical": "CENTER"
+                },
+                {
+                  "id": "alert-text",
+                  "name": "Alert Text",
+                  "type": "TEXT",
+                  "x": 70,
+                  "y": 20,
+                  "width": 252,
+                  "height": 60,
+                  "characters": "Tingkat Risiko Wilayah: TINGGI\nTetap waspada dan hindari judi online!",
+                  "fontSize": 14,
+                  "fontName": {
+                    "family": "Inter",
+                    "style": "SemiBold"
+                  },
+                  "fontWeight": 600,
+                  "fills": [{"type": "SOLID", "color": {"r": 0.84, "g": 0.16, "b": 0.16}}],
+                  "lineHeight": {"unit": "PIXELS", "value": 20}
+                }
+              ]
+            },
+            {
+              "id": "menu-grid",
+              "name": "Menu Grid",
+              "type": "FRAME",
+              "x": 24,
+              "y": 270,
+              "width": 342,
+              "height": 480,
+              "layoutMode": "VERTICAL",
+              "itemSpacing": 16,
+              "children": [
+                {
+                  "id": "menu-row-1",
+                  "name": "Menu Row 1",
+                  "type": "FRAME",
+                  "width": 342,
+                  "height": 120,
+                  "layoutMode": "HORIZONTAL",
+                  "itemSpacing": 16,
+                  "children": [
+                    {
+                      "id": "simulasi-card",
+                      "name": "🎰 Simulasi Kerugian",
+                      "type": "FRAME",
+                      "width": 163,
+                      "height": 120,
+                      "background": {
+                        "type": "GRADIENT_LINEAR",
+                        "gradientStops": [
+                          {"color": "rgba(214, 40, 40, 1)", "position": 0},
+                          {"color": "rgba(185, 28, 28, 1)", "position": 1}
+                        ]
+                      },
+                      "cornerRadius": 16,
+                      "effects": [
+                        {
+                          "type": "DROP_SHADOW",
+                          "color": {"r": 0.84, "g": 0.16, "b": 0.16, "a": 0.3},
+                          "offset": {"x": 0, "y": 4},
+                          "radius": 12
+                        }
+                      ],
+                      "children": [
+                        {
+                          "id": "simulasi-icon",
+                          "name": "Simulasi Icon",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 16,
+                          "width": 32,
+                          "height": 32,
+                          "characters": "🎰",
+                          "fontSize": 24,
+                          "textAlignHorizontal": "CENTER"
+                        },
+                        {
+                          "id": "simulasi-title",
+                          "name": "Simulasi Title",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 56,
+                          "width": 139,
+                          "height": 48,
+                          "characters": "Simulasi\nKerugian",
+                          "fontSize": 16,
+                          "fontName": {"family": "Inter", "style": "Bold"},
+                          "fontWeight": 700,
+                          "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1}}],
+                          "lineHeight": {"unit": "PIXELS", "value": 22}
+                        }
+                      ]
+                    },
+                    {
+                      "id": "edukasi-card",
+                      "name": "📚 Edukasi",
+                      "type": "FRAME",
+                      "width": 163,
+                      "height": 120,
+                      "background": {
+                        "type": "GRADIENT_LINEAR",
+                        "gradientStops": [
+                          {"color": "rgba(29, 53, 87, 1)", "position": 0},
+                          {"color": "rgba(21, 40, 65, 1)", "position": 1}
+                        ]
+                      },
+                      "cornerRadius": 16,
+                      "effects": [
+                        {
+                          "type": "DROP_SHADOW",
+                          "color": {"r": 0.11, "g": 0.21, "b": 0.34, "a": 0.3},
+                          "offset": {"x": 0, "y": 4},
+                          "radius": 12
+                        }
+                      ],
+                      "children": [
+                        {
+                          "id": "edukasi-icon",
+                          "name": "Edukasi Icon",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 16,
+                          "width": 32,
+                          "height": 32,
+                          "characters": "📚",
+                          "fontSize": 24
+                        },
+                        {
+                          "id": "edukasi-title",
+                          "name": "Edukasi Title",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 56,
+                          "width": 139,
+                          "height": 48,
+                          "characters": "Edukasi\nBahaya Judi",
+                          "fontSize": 16,
+                          "fontName": {"family": "Inter", "style": "Bold"},
+                          "fontWeight": 700,
+                          "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1}}],
+                          "lineHeight": {"unit": "PIXELS", "value": 22}
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "menu-row-2",
+                  "name": "Menu Row 2",
+                  "type": "FRAME",
+                  "width": 342,
+                  "height": 120,
+                  "layoutMode": "HORIZONTAL",
+                  "itemSpacing": 16,
+                  "children": [
+                    {
+                      "id": "spiral-card",
+                      "name": "📉 Grafik Spiral",
+                      "type": "FRAME",
+                      "width": 163,
+                      "height": 120,
+                      "background": {
+                        "type": "GRADIENT_LINEAR",
+                        "gradientStops": [
+                          {"color": "rgba(251, 191, 36, 1)", "position": 0},
+                          {"color": "rgba(245, 158, 11, 1)", "position": 1}
+                        ]
+                      },
+                      "cornerRadius": 16,
+                      "effects": [
+                        {
+                          "type": "DROP_SHADOW",
+                          "color": {"r": 0.96, "g": 0.62, "b": 0.14, "a": 0.3},
+                          "offset": {"x": 0, "y": 4},
+                          "radius": 12
+                        }
+                      ],
+                      "children": [
+                        {
+                          "id": "spiral-icon",
+                          "name": "Spiral Icon",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 16,
+                          "width": 32,
+                          "height": 32,
+                          "characters": "📉",
+                          "fontSize": 24
+                        },
+                        {
+                          "id": "spiral-title",
+                          "name": "Spiral Title",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 56,
+                          "width": 139,
+                          "height": 48,
+                          "characters": "Grafik\nSpiral Rugi",
+                          "fontSize": 16,
+                          "fontName": {"family": "Inter", "style": "Bold"},
+                          "fontWeight": 700,
+                          "fills": [{"type": "SOLID", "color": {"r": 0.11, "g": 0.21, "b": 0.34}}],
+                          "lineHeight": {"unit": "PIXELS", "value": 22}
+                        }
+                      ]
+                    },
+                    {
+                      "id": "emotion-card",
+                      "name": "❤️ Cek Emosi",
+                      "type": "FRAME",
+                      "width": 163,
+                      "height": 120,
+                      "background": {
+                        "type": "GRADIENT_LINEAR",
+                        "gradientStops": [
+                          {"color": "rgba(16, 185, 129, 1)", "position": 0},
+                          {"color": "rgba(5, 150, 105, 1)", "position": 1}
+                        ]
+                      },
+                      "cornerRadius": 16,
+                      "effects": [
+                        {
+                          "type": "DROP_SHADOW",
+                          "color": {"r": 0.06, "g": 0.73, "b": 0.51, "a": 0.3},
+                          "offset": {"x": 0, "y": 4},
+                          "radius": 12
+                        }
+                      ],
+                      "children": [
+                        {
+                          "id": "emotion-icon",
+                          "name": "Emotion Icon",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 16,
+                          "width": 32,
+                          "height": 32,
+                          "characters": "❤️",
+                          "fontSize": 24
+                        },
+                        {
+                          "id": "emotion-title",
+                          "name": "Emotion Title",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 56,
+                          "width": 139,
+                          "height": 48,
+                          "characters": "Cek Emosi\n& Mood",
+                          "fontSize": 16,
+                          "fontName": {"family": "Inter", "style": "Bold"},
+                          "fontWeight": 700,
+                          "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1}}],
+                          "lineHeight": {"unit": "PIXELS", "value": 22}
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "menu-row-3",
+                  "name": "Menu Row 3",
+                  "type": "FRAME",
+                  "width": 342,
+                  "height": 120,
+                  "layoutMode": "HORIZONTAL",
+                  "itemSpacing": 16,
+                  "children": [
+                    {
+                      "id": "location-card",
+                      "name": "📍 Risiko Wilayah",
+                      "type": "FRAME",
+                      "width": 163,
+                      "height": 120,
+                      "background": {
+                        "type": "GRADIENT_LINEAR",
+                        "gradientStops": [
+                          {"color": "rgba(139, 69, 19, 1)", "position": 0},
+                          {"color": "rgba(101, 50, 14, 1)", "position": 1}
+                        ]
+                      },
+                      "cornerRadius": 16,
+                      "effects": [
+                        {
+                          "type": "DROP_SHADOW",
+                          "color": {"r": 0.55, "g": 0.27, "b": 0.07, "a": 0.3},
+                          "offset": {"x": 0, "y": 4},
+                          "radius": 12
+                        }
+                      ],
+                      "children": [
+                        {
+                          "id": "location-icon",
+                          "name": "Location Icon",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 16,
+                          "width": 32,
+                          "height": 32,
+                          "characters": "📍",
+                          "fontSize": 24
+                        },
+                        {
+                          "id": "location-title",
+                          "name": "Location Title",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 56,
+                          "width": 139,
+                          "height": 48,
+                          "characters": "Risiko\nWilayah",
+                          "fontSize": 16,
+                          "fontName": {"family": "Inter", "style": "Bold"},
+                          "fontWeight": 700,
+                          "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1}}],
+                          "lineHeight": {"unit": "PIXELS", "value": 22}
+                        }
+                      ]
+                    },
+                    {
+                      "id": "help-card",
+                      "name": "🆘 Bantuan",
+                      "type": "FRAME",
+                      "width": 163,
+                      "height": 120,
+                      "background": {
+                        "type": "GRADIENT_LINEAR",
+                        "gradientStops": [
+                          {"color": "rgba(147, 51, 234, 1)", "position": 0},
+                          {"color": "rgba(126, 34, 206, 1)", "position": 1}
+                        ]
+                      },
+                      "cornerRadius": 16,
+                      "effects": [
+                        {
+                          "type": "DROP_SHADOW",
+                          "color": {"r": 0.58, "g": 0.2, "b": 0.92, "a": 0.3},
+                          "offset": {"x": 0, "y": 4},
+                          "radius": 12
+                        }
+                      ],
+                      "children": [
+                        {
+                          "id": "help-icon",
+                          "name": "Help Icon",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 16,
+                          "width": 32,
+                          "height": 32,
+                          "characters": "🆘",
+                          "fontSize": 24
+                        },
+                        {
+                          "id": "help-title",
+                          "name": "Help Title",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 56,
+                          "width": 139,
+                          "height": 48,
+                          "characters": "Bantuan\nDarurat",
+                          "fontSize": 16,
+                          "fontName": {"family": "Inter", "style": "Bold"},
+                          "fontWeight": 700,
+                          "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1}}],
+                          "lineHeight": {"unit": "PIXELS", "value": 22}
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "designSystem": {
+    "colors": {
+      "danger": {"r": 0.84, "g": 0.16, "b": 0.16},
+      "primary": {"r": 0.11, "g": 0.21, "b": 0.34},
+      "warning": {"r": 1, "g": 0.8, "b": 0},
+      "success": {"r": 0.06, "g": 0.73, "b": 0.51},
+      "background": {"r": 0.97, "g": 0.98, "b": 0.99},
+      "white": {"r": 1, "g": 1, "b": 1}
+    },
+    "typography": {
+      "fontFamily": "Inter",
+      "weights": {
+        "regular": 400,
+        "medium": 500,
+        "semibold": 600,
+        "bold": 700,
+        "extrabold": 800
+      }
+    },
+    "borderRadius": {
+      "small": 8,
+      "medium": 12,
+      "large": 16,
+      "xl": 24,
+      "full": 32
+    },
+    "spacing": {
+      "xs": 4,
+      "sm": 8,
+      "md": 12,
+      "lg": 16,
+      "xl": 24,
+      "2xl": 32
+    }
+  },
+  "metadata": {
+    "version": "2.0",
+    "compatibility": "Figma Plugin API",
+    "notes": [
+      "Import dengan plugin 'Figma to JSON' atau 'JSON to Figma'",
+      "Pastikan font Inter tersedia di Figma",
+      "Gunakan Auto Layout untuk responsivitas",
+      "Warna menggunakan format RGB 0-1",
+      "Emoji dapat diganti dengan icon SVG"
+    ],
+    "features": [
+      "Gradient backgrounds untuk visual menarik",
+      "Drop shadows untuk depth",
+      "Consistent spacing system",
+      "Color-coded categories",
+      "Responsive grid layout"
+    ]
+  }
+}

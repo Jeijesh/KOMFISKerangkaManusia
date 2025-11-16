@@ -12,96 +12,233 @@ body {
   margin: 0;
   font-family: 'Fredoka', Arial, sans-serif;
   display: flex;
+  flex-direction: column;
   height: 100vh;
   background: linear-gradient(135deg, rgba(84,141,255,0.35), rgba(255,183,77,0.25)) no-repeat fixed, url('./background.png') no-repeat center center fixed;
   background-size: cover;
 }
 
-/* Container kiri untuk 3D */
-#canvas-container {
-  flex: 8; /* 80% lebar */
-  position: relative;
+/* Main Content Container */
+#main-container {
+  display: flex;
+  flex: 1;
   overflow: hidden;
-  border-top-right-radius: 24px;
-  border-bottom-right-radius: 24px;
-  box-shadow: inset 0 0 30px rgba(0,0,0,0.25);
 }
 
-/* Judul di kiri atas */
-#left-title {
-  position: absolute;
-  top: 10px;
-  left: 10px;
+/* Sidebar Categories */
+#sidebar {
+  width: 280px;
+  background: linear-gradient(180deg, rgba(29,41,77,0.95), rgba(33,64,95,0.9));
   color: #fff;
-  font-size: 2.5em;
-  font-weight: bold;
-  background: rgba(0,0,0,0.5);
-  padding: 5px 10px;
-  border-radius: 5px;
-  z-index: 5;
-  letter-spacing: 1px;
-  text-shadow: 0 3px 12px rgba(0,0,0,0.45);
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.25);
 }
 
-/* Petunjuk kontrol di kiri bawah */
-#controls-info {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
+#sidebar h3 {
+  margin: 0 0 16px;
+  color: #ffd166;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#search-box {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.1);
   color: #fff;
-  background: rgba(0,0,0,0.5);
-  padding: 8px 10px;
-  border-radius: 12px;
-  backdrop-filter: blur(6px);
-  font-size: 0.9em;
-  z-index: 5;
+  margin-bottom: 20px;
+  font-family: 'Fredoka', Arial, sans-serif;
 }
 
-#controls-info::before {
-  content: "🕹️ ";
+#search-box::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+.category-group {
+  margin-bottom: 24px;
+}
+
+.category-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #ffd166;
   font-size: 1.1em;
 }
 
-/* Panel kanan untuk funfact */
-#info-panel {
-  flex: 2; /* 20% lebar */
-  background: linear-gradient(180deg, rgba(29,41,77,0.95), rgba(33,64,95,0.9));
-  color: #fff;
-  padding: 28px 24px;
-  overflow-y: auto;
-  border-radius: 24px 0 0 24px;
-  box-shadow: -10px 0 24px rgba(0,0,0,0.35);
+.bone-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.info-card {
+.bone-item {
+  padding: 8px 12px;
+  margin: 4px 0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(255,255,255,0.05);
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  background: rgba(12, 28, 68, 0.65);
-  padding: 18px 20px;
-  border-radius: 18px;
-  box-shadow: inset 0 0 12px rgba(255,255,255,0.05);
+  align-items: center;
+  gap: 8px;
 }
-.info-card h2 {
-  margin: 0 0 8px;
-  font-size: 1.3em;
+
+.bone-item:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateX(4px);
+}
+
+.bone-item.active {
+  background: linear-gradient(90deg, #ffd166, #ffb347);
+  color: #102a43;
+  font-weight: 600;
+}
+
+/* Container kiri untuk 3D - sekarang full width */
+#canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Cloud Popup for Bone Info */
+.bone-info-popup {
+  position: absolute;
+  background: rgba(29,41,77,0.95);
+  color: #fff;
+  padding: 16px 20px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  max-width: 280px;
+  z-index: 100;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  right: 40px;
+  top: 50%;
+  margin-top: -100px;
+  transform: scale(0);
+  transform-origin: right center;
+}
+
+.bone-info-popup.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.bone-info-popup::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 8px solid rgba(29,41,77,0.95);
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.popup-icon {
+  font-size: 1.8em;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.popup-title {
+  font-size: 1.1em;
+  font-weight: 600;
   color: #ffd166;
-}
-.info-card p {
   margin: 0;
-  font-size: 1.05em;
-  line-height: 1.7;
+}
+
+.popup-function {
+  font-size: 0.9em;
+  line-height: 1.4;
   color: #f4f7ff;
+  margin: 0 0 12px;
 }
-.info-icon {
-  font-size: 2.2em;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.35));
+
+.popup-functions {
+  background: rgba(12, 28, 68, 0.4);
+  padding: 12px;
+  border-radius: 12px;
 }
-.info-text {
+
+.popup-functions h4 {
+  margin: 0 0 8px;
+  font-size: 0.85em;
+  color: #ffd166;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 6px;
 }
+
+.popup-function-item {
+  font-size: 0.8em;
+  line-height: 1.3;
+  color: #e2e8f0;
+  margin: 4px 0;
+  padding-left: 8px;
+  position: relative;
+}
+
+.popup-function-item::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #ffd166;
+}
+
+/* Bottom Fun Facts Bar */
+#bottom-bar {
+  background: linear-gradient(90deg, rgba(29,41,77,0.95), rgba(33,64,95,0.9));
+  color: #fff;
+  padding: 16px 24px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+  min-height: 60px;
+}
+
+.fun-fact-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.fun-fact-icon {
+  font-size: 2em;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.fun-fact-text {
+  flex: 1;
+}
+
+.fun-fact-text h3 {
+  margin: 0 0 4px;
+  color: #ffd166;
+  font-size: 1.1em;
+}
+
+.fun-fact-text p {
+  margin: 0;
+  font-size: 0.95em;
+  line-height: 1.4;
+  color: #f4f7ff;
+}
+
+.hidden { display: none; }
 </style>
 <script type="importmap">
 {
@@ -114,20 +251,69 @@ body {
 </script>
 </head>
 <body>
-<div id="canvas-container">
-  <div id="left-title">Kerangka Tubuh Manusia</div>
-  <div id="controls-info">
-    Kontrol: <br>
-    - Geser mouse untuk putar <br>
-    - Scroll untuk zoom <br>
-    - Klik tulang untuk info <br>
-    - ESC untuk reset highlight
+<div id="main-container">
+  <div id="sidebar">
+    <h3>🔍 Jelajahi Tulang</h3>
+    <input type="text" id="search-box" placeholder="Cari nama tulang...">
+    
+    <div class="category-group">
+      <div class="category-title">👤 Kepala & Leher</div>
+      <ul class="bone-list">
+        <li class="bone-item" data-bone="Tengkorak">🧠 Tengkorak</li>
+        <li class="bone-item" data-bone="Rahang_Bawah">🦷 Rahang Bawah</li>
+        <li class="bone-item" data-bone="Tulang_Leher">🗼 Tulang Leher</li>
+      </ul>
+    </div>
+
+    <div class="category-group">
+      <div class="category-title">💪 Lengan & Tangan</div>
+      <ul class="bone-list">
+        <li class="bone-item" data-bone="Tulang_Lengan_Atas">💪 Lengan Atas</li>
+        <li class="bone-item" data-bone="Tulang_Hasta">🦴 Tulang Hasta</li>
+        <li class="bone-item" data-bone="Tulang_Pengumpil">🔄 Tulang Pengumpil</li>
+        <li class="bone-item" data-bone="Tulang_Telapak_Tangan">👐 Telapak Tangan</li>
+        <li class="bone-item" data-bone="Tulang_Jari_Tangan">✋ Jari Tangan</li>
+      </ul>
+    </div>
+
+    <div class="category-group">
+      <div class="category-title">🏃 Kaki & Tungkai</div>
+      <ul class="bone-list">
+        <li class="bone-item" data-bone="Tulang_Paha">🦵 Tulang Paha</li>
+        <li class="bone-item" data-bone="Tulang_Tempurung_Lutut">🔘 Tempurung Lutut</li>
+        <li class="bone-item" data-bone="Tulang_Kering">📏 Tulang Kering</li>
+        <li class="bone-item" data-bone="Tulang_Betis">🦴 Tulang Betis</li>
+        <li class="bone-item" data-bone="Tulang_Jari_Kaki">🦶 Jari Kaki</li>
+      </ul>
+    </div>
+
+    <div class="category-group">
+      <div class="category-title">🏗️ Tubuh & Punggung</div>
+      <ul class="bone-list">
+        <li class="bone-item" data-bone="Tulang_Belakang">🐍 Tulang Belakang</li>
+        <li class="bone-item" data-bone="Tulang_Rusuk">🫁 Tulang Rusuk</li>
+        <li class="bone-item" data-bone="Tulang_Panggul">⚪ Tulang Panggul</li>
+        <li class="bone-item" data-bone="Tulang_Belikat">🛡️ Tulang Belikat</li>
+        <li class="bone-item" data-bone="Tulang_Selangka">➖ Tulang Selangka</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="canvas-container">
+    <div id="bone-popup" class="bone-info-popup">
+      <!-- Content will be populated by JavaScript -->
+    </div>
   </div>
 </div>
 
-<div id="info-panel">
-  <h2>Fun Fact Tulang</h2>
-  <p>Klik bagian tulang untuk info</p>
+<div id="bottom-bar">
+  <div class="fun-fact-content">
+    <div class="fun-fact-icon">💡</div>
+    <div class="fun-fact-text">
+      <h3 id="fun-fact-title">Tahukah Kamu?</h3>
+      <p id="fun-fact-content">Pilih bagian tulang untuk melihat fakta menarik tentang tulangmu!</p>
+    </div>
+  </div>
 </div>
 
 <script type="module">
@@ -174,51 +360,103 @@ rimPositions.forEach(pos => {
 // Load model
 const loader = new GLTFLoader();
 let modelRoot;
-loader.load('./kerangka.glb', gltf => {
-  modelRoot = gltf.scene;
-  modelRoot.position.set(0,-1,0);
-  scene.add(modelRoot);
+loader.load('./kerangka.glb', 
+  // Success callback
+  gltf => {
+    modelRoot = gltf.scene;
+    modelRoot.position.set(0,-1,0);
+    scene.add(modelRoot);
 
-  modelRoot.traverse(node => {
-    if(node.isMesh){
-      if (!node.userData.originalScale) {
-        node.userData.originalScale = node.scale.clone();
+    modelRoot.traverse(node => {
+      if(node.isMesh){
+        if (!node.userData.originalScale) {
+          node.userData.originalScale = node.scale.clone();
+        }
+        console.log('Mesh found:', node.name);
+        
+        // Add raycast layers for better detection
+        node.raycast = THREE.Mesh.prototype.raycast;
       }
-      console.log(node.name);
-    }
-  });
-});
+    });
+    
+    console.log('Model loaded successfully');
+    console.log('All mesh names:', getAllMeshNames());
+  },
+  // Progress callback
+  progress => {
+    console.log('Loading progress:', (progress.loaded / progress.total * 100) + '%');
+  },
+  // Error callback
+  error => {
+    console.error('Error loading model:', error);
+    console.log('Make sure kerangka.glb file exists in the same folder as index.html');
+    
+    // Add a simple cube as fallback for testing
+    const geometry = new THREE.BoxGeometry(1, 2, 0.5);
+    const material = new THREE.MeshLambertMaterial({ color: 0xcccccc });
+    const cube = new THREE.Mesh(geometry, material);
+    cube.name = 'Tengkorak';
+    cube.position.set(0, 0, 0);
+    scene.add(cube);
+    
+    // Store as modelRoot for testing
+    modelRoot = new THREE.Group();
+    modelRoot.add(cube);
+    cube.userData.originalScale = cube.scale.clone();
+    console.log('Fallback cube added for testing');
+  }
+);
 
-// Messages
+// Enhanced messages with functions and fun facts
 const messages = {
-  "Rahang_Bawah": {name:"Rahang Bawah", funfact:"Rahang bawah adalah tulang kuat yang berfungsi untuk menggigit dan mengunyah makanan."},
-  "Tengkorak": {name:"Tengkorak", funfact:"Tengkorak melindungi otak dan membentuk struktur wajah."},
-  "Tulang_Belakang": {name:"Tulang Belakang", funfact:"Tulang belakang menopang tubuh dan melindungi sumsum tulang belakang."},
-  "Tulang_Belikat": {name:"Tulang Belikat", funfact:"Tulang belikat menghubungkan lengan dengan tubuh."},
-  "Tulang_Betis": {name:"Tulang Betis", funfact:"Tulang betis menopang berat tubuh dan membantu keseimbangan."},
-  "Tulang_Hasta": {name:"Tulang Hasta", funfact:"Tulang hasta memungkinkan pergerakan lengan bawah dan pergelangan tangan."},
-  "Tulang_Jari_Kaki": {name:"Tulang Jari Kaki", funfact:"Tulang jari kaki mendukung keseimbangan dan membantu berjalan."},
-  "Tulang_Jari_Tangan": {name:"Tulang Jari Tangan", funfact:"Tulang jari tangan memungkinkan gerakan presisi dan memegang benda."},
-  "Tulang_Kering": {name:"Tulang Kering", funfact:"Tulang kering menopang tubuh dan menjaga kestabilan saat bergerak."},
-  "Tulang_Leher": {name:"Tulang Leher", funfact:"Tulang leher mendukung kepala dan memungkinkan rotasi."},
-  "Tulang_Lengan_Atas": {name:"Tulang Lengan Atas", funfact:"Tulang lengan atas menghubungkan bahu dan siku."},
-  "Tulang_Paha": {name:"Tulang Paha", funfact:"Tulang paha adalah tulang terpanjang yang menopang tubuh."},
-  "Tulang_Panggul": {name:"Tulang Panggul" , funfact:"Tulang panggul menopang tubuh bagian atas dan menahan organ dalam."},
-  "Tulang_Pengumpil": {name:"Tulang Pengumpil", funfact:"Tulang pengumpil memungkinkan rotasi lengan bawah."},
-  "Tulang_Pergelangan_Kaki": {name:"Tulang Pergelangan Kaki", funfact:"Tulang pergelangan kaki memungkinkan gerakan fleksibel sambil menopang tubuh."},
-  "Tulang_Rusuk": {name:"Tulang Rusuk", funfact:"Tulang rusuk melindungi jantung dan paru-paru."},
-  "Tulang_Selangka": {name:"Tulang Selangka", funfact:"Tulang selangka menghubungkan lengan dengan tubuh."},
-  "Tulang_Telapak_Tangan": {name:"Tulang Telapak Tangan", funfact:"Tulang telapak tangan mendukung gerakan jari dan pegangan tangan."},
-  "Tulang_Tempurung_Lutut": {name:"Tulang Tempurung Lutut", funfact:"Tulang tempurung lutut melindungi sendi lutut."}
+  "Rahang_Bawah": {
+    name:"Rahang Bawah", 
+    function:"Menggigit dan mengunyah makanan dengan kekuatan hingga 70 kg per cm²",
+    functions: ["Menggigit makanan keras", "Mengunyah dan menghaluskan makanan", "Membantu berbicara dan artikulasi", "Memberikan bentuk pada wajah bagian bawah"],
+    funfact:"Rahang manusia bisa menggigit dengan kekuatan 200 pon per inci persegi - lebih kuat dari gigitan singa!"
+  },
+  "Tengkorak": {
+    name:"Tengkorak", 
+    function:"Melindungi otak dan organ sensorik dari benturan dan cedera",
+    functions: ["Melindungi otak dari trauma", "Menopang organ sensorik (mata, telinga, hidung)", "Memberikan struktur wajah", "Melindungi pembuluh darah otak"],
+    funfact:"Tengkorak bayi memiliki celah lunak yang disebut fontanel, yang memungkinkan otak tumbuh pesat dalam 2 tahun pertama!"
+  },
+  "Tulang_Belakang": {
+    name:"Tulang Belakang", 
+    function:"Menopang tubuh dan melindungi sumsum tulang belakang",
+    functions: ["Menopang berat tubuh", "Melindungi sumsum tulang belakang", "Memungkinkan gerakan fleksibel", "Menyangga kepala dan organ dalam"],
+    funfact:"Tulang belakang memiliki 4 lengkungan alami yang berfungsi seperti pegas untuk menyerap guncangan saat berjalan!"
+  },
+  "Tulang_Paha": {
+    name:"Tulang Paha", 
+    function:"Menopang seluruh berat tubuh dan memungkinkan gerakan berjalan",
+    functions: ["Menopang berat tubuh saat berdiri", "Memungkinkan gerakan berjalan dan berlari", "Mentransfer beban ke tulang kaki", "Tempat menempel otot paha yang kuat"],
+    funfact:"Tulang paha adalah tulang terpanjang dan terkuat - bisa menahan tekanan hingga 1.800-2.500 pon!"
+  },
+  "Tulang_Belikat": {name:"Tulang Belikat", function:"Menghubungkan lengan dengan tubuh", functions: ["Menopang lengan", "Memungkinkan gerakan bahu"], funfact:"Tulang belikat dapat bergerak dalam 6 arah berbeda!"},
+  "Tulang_Betis": {name:"Tulang Betis", function:"Menopang berat tubuh dan membantu keseimbangan", functions: ["Menopang tubuh", "Membantu keseimbangan"], funfact:"Tulang betis lebih tipis dari tulang kering tapi sangat fleksibel!"},
+  "Tulang_Hasta": {name:"Tulang Hasta", function:"Memungkinkan pergerakan lengan bawah dan pergelangan tangan", functions: ["Gerakan lengan bawah", "Rotasi pergelangan"], funfact:"Tulang hasta membantu kita memutar telapak tangan!"},
+  "Tulang_Jari_Kaki": {name:"Tulang Jari Kaki", function:"Mendukung keseimbangan dan membantu berjalan", functions: ["Keseimbangan", "Dorongan saat berjalan"], funfact:"Jari kaki besar menahan 40% berat tubuh saat berjalan!"},
+  "Tulang_Jari_Tangan": {name:"Tulang Jari Tangan", function:"Memungkinkan gerakan presisi dan memegang benda", functions: ["Gerakan presisi", "Menggenggam"], funfact:"Tangan manusia memiliki 27 tulang kecil!"},
+  "Tulang_Kering": {name:"Tulang Kering", function:"Menopang tubuh dan menjaga kestabilan saat bergerak", functions: ["Menopang tubuh", "Stabilitas"], funfact:"Tulang kering adalah tulang terkuat kedua setelah tulang paha!"},
+  "Tulang_Leher": {name:"Tulang Leher", function:"Mendukung kepala dan memungkinkan rotasi", functions: ["Menopang kepala", "Rotasi leher"], funfact:"Leher manusia memiliki 7 ruas tulang belakang!"},
+  "Tulang_Lengan_Atas": {name:"Tulang Lengan Atas", function:"Menghubungkan bahu dan siku", functions: ["Gerakan lengan", "Kekuatan angkat"], funfact:"Tulang lengan atas sangat kuat dan bisa menahan beban hingga 300kg!"},
+  "Tulang_Panggul": {name:"Tulang Panggul", function:"Menopang tubuh bagian atas dan menahan organ dalam", functions: ["Menopang tubuh atas", "Melindungi organ"], funfact:"Panggul wanita lebih lebar dari pria untuk memudahkan persalinan!"},
+  "Tulang_Pengumpil": {name:"Tulang Pengumpil", function:"Memungkinkan rotasi lengan bawah", functions: ["Rotasi lengan", "Gerakan pergelangan"], funfact:"Tulang pengumpil bekerja sama dengan tulang hasta untuk memutar lengan!"},
+  "Tulang_Pergelangan_Kaki": {name:"Tulang Pergelangan Kaki", function:"Memungkinkan gerakan fleksibel sambil menopang tubuh", functions: ["Fleksibilitas kaki", "Menopang tubuh"], funfact:"Pergelangan kaki menahan beban 5x berat tubuh saat berlari!"},
+  "Tulang_Rusuk": {name:"Tulang Rusuk", function:"Melindungi jantung dan paru-paru", functions: ["Melindungi organ vital", "Membantu pernapasan"], funfact:"Manusia memiliki 24 tulang rusuk - 12 pasang!"},
+  "Tulang_Selangka": {name:"Tulang Selangka", function:"Menghubungkan lengan dengan tubuh", functions: ["Menghubungkan lengan-tubuh", "Stabilitas bahu"], funfact:"Tulang selangka adalah tulang pertama yang mengeras saat bayi!"},
+  "Tulang_Telapak_Tangan": {name:"Tulang Telapak Tangan", function:"Mendukung gerakan jari dan pegangan tangan", functions: ["Menopang jari", "Pegangan kuat"], funfact:"Telapak tangan memiliki lengkungan yang membantu menggenggam!"},
+  "Tulang_Tempurung_Lutut": {name:"Tulang Tempurung Lutut", function:"Melindungi sendi lutut", functions: ["Melindungi lutut", "Membantu gerakan kaki"], funfact:"Tempurung lutut adalah tulang sesamoid terbesar dalam tubuh!"}
 };
 
 // Raycaster
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-const infoPanel = document.getElementById('info-panel');
+const bonePopup = document.getElementById('bone-popup');
 const defaultInfo = {
   title: 'Pilih Tulang Favoritmu!',
-  text: '🖱️ Klik bagian tubuh untuk melihat fakta tulang yang seru.'
+  text: '🖱️ Klik bagian tubuh untuk melihat fungsi tulang.'
 };
 let highlightedMesh = null;
 let previousMaterial = null;
@@ -251,21 +489,50 @@ function cloneHighlightedMaterial(mat) {
   return clone;
 }
 
-function renderInfoPanel(title, fact) {
-  infoPanel.innerHTML = `
-    <div class="info-card">
-      <div class="info-icon">🦴</div>
-      <div class="info-text">
-        <h2>${title}</h2>
-        <p>${fact}</p>
+// Show popup cloud with bone info
+function showBonePopup(mesh, screenPos) {
+  const msg = messages[mesh.name];
+  if (!msg) {
+    console.log('No message found for:', mesh.name);
+    return;
+  }
+
+  console.log('Showing popup for:', mesh.name);
+  
+  // First, ensure popup is hidden and reset
+  bonePopup.classList.remove('visible');
+  
+  // Small delay to ensure transition triggers
+  setTimeout(() => {
+    bonePopup.innerHTML = `
+      <div class="popup-header">
+        <div class="popup-icon">🦴</div>
+        <h3 class="popup-title">${msg.name}</h3>
       </div>
-    </div>
-  `;
+      <p class="popup-function">${msg.function}</p>
+      <div class="popup-functions">
+        <h4>⚙️ Fungsi Utama:</h4>
+        ${msg.functions.map(func => `<div class="popup-function-item">${func}</div>`).join('')}
+      </div>
+    `;
+
+    // Force reflow to ensure transition happens
+    void bonePopup.offsetWidth;
+    
+    // Show popup - stays visible until another bone is clicked or ESC is pressed
+    bonePopup.classList.add('visible');
+  }, 10);
+  
+  // Removed auto-hide timeout - popup stays visible
+}
+
+function hidePopup() {
+  bonePopup.classList.remove('visible');
 }
 
 function resetHighlight() {
   if (!highlightedMesh) {
-    renderInfoPanel(defaultInfo.title, defaultInfo.text);
+    updateBottomBar();
     return;
   }
   if (previousMaterial) {
@@ -278,7 +545,8 @@ function resetHighlight() {
   highlightedMesh = null;
   previousMaterial = null;
   pulsingMesh = null;
-  renderInfoPanel(defaultInfo.title, defaultInfo.text);
+  hidePopup();
+  updateBottomBar();
 }
 
 function focusOnMesh(mesh) {
@@ -298,7 +566,7 @@ function focusOnMesh(mesh) {
   focusState.active = true;
 }
 
-function highlightMesh(mesh) {
+function highlightMesh(mesh, clickPos = null) {
   resetHighlight();
   highlightedMesh = mesh;
   previousMaterial = mesh.material;
@@ -308,25 +576,128 @@ function highlightMesh(mesh) {
 
   const msg = messages[mesh.name];
   if (msg) {
-    renderInfoPanel(msg.name, `✨ ${msg.funfact}`);
+    updateBottomBar(`Fun Fact: ${msg.name}`, msg.funfact);
+    if (clickPos) showBonePopup(mesh, clickPos);
   } else {
-    renderInfoPanel(mesh.name || 'Tidak bernama', '✨ Belum ada fakta, tapi tulang ini tetap seru untuk dijelajahi!');
+    updateBottomBar('Fun Fact', 'Setiap tulang memiliki peran penting dalam tubuh kita!');
   }
+
+  // Track learning
+  if (mesh.name) learnedBones.add(mesh.name);
+  
+  // Update sidebar active state
+  document.querySelectorAll('.bone-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.bone === mesh.name);
+  });
 
   focusOnMesh(mesh);
 }
 
+// Update bottom bar with fun facts
+function updateBottomBar(title = "Tahukah Kamu?", content = "Pilih bagian tulang untuk melihat fakta menarik tentang tulangmu!") {
+  const titleElement = document.getElementById('fun-fact-title');
+  const contentElement = document.getElementById('fun-fact-content');
+  if (titleElement) titleElement.textContent = title;
+  if (contentElement) contentElement.textContent = content;
+}
+
+// Helper function to get all mesh names
+function getAllMeshNames() {
+  if (!modelRoot) return [];
+  const names = [];
+  modelRoot.traverse(node => {
+    if (node.isMesh && node.name) {
+      names.push(node.name);
+    }
+  });
+  return names;
+}
+
+// Improved raycaster with recursive search and name matching
+function findBestMatch(meshName) {
+  const cleanName = meshName.toLowerCase().replace(/[_\s.-]/g, '');
+  
+  // Direct match
+  if (messages[meshName]) return meshName;
+  
+  // Try to find partial matches
+  for (const key in messages) {
+    const cleanKey = key.toLowerCase().replace(/[_\s.-]/g, '');
+    if (cleanName.includes(cleanKey) || cleanKey.includes(cleanName)) {
+      console.log(`Matched ${meshName} to ${key}`);
+      return key;
+    }
+  }
+  
+  // Special cases for common variations
+  const mappings = {
+    'humerus': 'Tulang_Lengan_Atas',
+    'ulna': 'Tulang_Hasta',
+    'radius': 'Tulang_Pengumpil',
+    'carpal': 'Tulang_Telapak_Tangan',
+    'metacarpal': 'Tulang_Telapak_Tangan',
+    'phalanges': 'Tulang_Jari_Tangan',
+    'finger': 'Tulang_Jari_Tangan',
+    'hand': 'Tulang_Telapak_Tangan',
+    'arm': 'Tulang_Lengan_Atas',
+    'forearm': 'Tulang_Hasta'
+  };
+  
+  for (const [pattern, bone] of Object.entries(mappings)) {
+    if (cleanName.includes(pattern)) {
+      console.log(`Pattern matched ${meshName} to ${bone}`);
+      return bone;
+    }
+  }
+  
+  return null;
+}
+
+// Raycaster click event
 function onClick(event){
-  if (!modelRoot) return;
+  console.log('Click detected at:', event.clientX, event.clientY);
+  if (!modelRoot) {
+    console.log('Model not loaded yet');
+    return;
+  }
+  
   mouse.x = (event.clientX / window.innerWidth)*2 - 1;
   mouse.y = -(event.clientY / window.innerHeight)*2 + 1;
   raycaster.setFromCamera(mouse, camera);
 
+  // Increase raycaster precision for smaller bones
+  raycaster.params.Mesh.threshold = 0.1;
+  
   const intersects = raycaster.intersectObject(modelRoot, true);
+  console.log('Intersects found:', intersects.length);
+  
   if(intersects.length>0){
     const mesh = intersects[0].object;
-    if(!mesh.isMesh) return;
-    highlightMesh(mesh);
+    console.log('Clicked mesh name:', mesh.name);
+    console.log('Clicked mesh type:', mesh.type);
+    
+    if(!mesh.isMesh) {
+      console.log('Not a mesh, skipping');
+      return;
+    }
+    
+    // Try to find matching bone name
+    const matchedName = findBestMatch(mesh.name);
+    if (matchedName) {
+      // Temporarily set the matched name for display
+      const originalName = mesh.name;
+      mesh.name = matchedName;
+      highlightMesh(mesh, { x: event.clientX, y: event.clientY });
+      // Store original name for reference
+      mesh.userData.originalName = originalName;
+    } else {
+      console.log('No matching message found for mesh:', mesh.name);
+      console.log('Available bones:', Object.keys(messages));
+      // Still highlight but show generic message
+      highlightMesh(mesh, { x: event.clientX, y: event.clientY });
+    }
+  } else {
+    console.log('No intersects found');
   }
 }
 
@@ -343,8 +714,6 @@ window.addEventListener('resize', ()=>{
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
-renderInfoPanel(defaultInfo.title, defaultInfo.text);
 
 function animate(){
   requestAnimationFrame(animate);
@@ -374,6 +743,69 @@ function animate(){
   renderer.render(scene,camera);
 }
 animate();
+
+// Sidebar interaction
+document.querySelectorAll('.bone-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const boneName = item.dataset.bone;
+    // Remove active from all items
+    document.querySelectorAll('.bone-item').forEach(i => i.classList.remove('active'));
+    // Add active to clicked item
+    item.classList.add('active');
+    
+    // Find and highlight the bone in 3D model
+    if (modelRoot) {
+      let mesh = modelRoot.getObjectByName(boneName);
+      
+      // If not found, try to find by matching
+      if (!mesh) {
+        modelRoot.traverse(node => {
+          if (node.isMesh && !mesh) {
+            const matchedName = findBestMatch(node.name);
+            if (matchedName === boneName) {
+              mesh = node;
+              // Set the matched name for display
+              mesh.userData.originalName = mesh.name;
+              mesh.name = matchedName;
+            }
+          }
+        });
+      }
+      
+      if (mesh) {
+        highlightMesh(mesh, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+      }
+    }
+  });
+});
+
+// Search functionality
+document.getElementById('search-box').addEventListener('input', (e) => {
+  const search = e.target.value.toLowerCase();
+  document.querySelectorAll('.bone-item').forEach(item => {
+    const text = item.textContent.toLowerCase();
+    item.style.display = text.includes(search) ? 'flex' : 'none';
+  });
+});
+
+// Study time counter - remove references to non-existent elements
+let studyStartTime = Date.now();
+let learnedBones = new Set();
+
+function updateStats() {
+  const elapsed = Math.floor((Date.now() - studyStartTime) / 1000);
+  const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+  const seconds = (elapsed % 60).toString().padStart(2, '0');
+  
+  // Only update if elements exist
+  const studyTimeElement = document.getElementById('study-time');
+  const learnedCountElement = document.getElementById('learned-count');
+  
+  if (studyTimeElement) studyTimeElement.textContent = `${minutes}:${seconds}`;
+  if (learnedCountElement) learnedCountElement.textContent = learnedBones.size;
+}
+
+setInterval(updateStats, 1000);
 </script>
 </body>
 </html>
