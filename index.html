@@ -239,6 +239,21 @@ body {
 }
 
 .hidden { display: none; }
+
+#controls-info {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 10px 14px;
+  background: rgba(0,0,0,0.45);
+  color: #ffd166;
+  font-size: 13px;
+  line-height: 1.45;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  pointer-events: none; /* biar ga ganggu klik */
+}
+
 </style>
 <script type="importmap">
 {
@@ -250,7 +265,20 @@ body {
 }
 </script>
 </head>
+
+
+
+
 <body>
+<div id="controls-info">
+  <b>Kontrol</b><br>
+  • Klik Kiri: Pilih Tulang<br>
+  • Klik Kanan: Putar Kamera<br>
+  • Scroll: Zoom<br>
+  • Drag Tengah: Geser (Pan)<br>
+  • Drag Klik Kiri: Orbit<br>
+</div>
+
 <div id="main-container">
   <div id="sidebar">
     <h3>🔍 Jelajahi Tulang</h3>
@@ -334,10 +362,9 @@ canvasContainer.appendChild(renderer.domElement);
 // Controls
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-controls.dampingFactor = 0.05;
+controls.dampingFactor = 0.01;
 controls.target.set(0,1,0);
 controls.update();
-
 // Lights
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.8);
 hemiLight.position.set(0, 20, 0);
@@ -730,7 +757,7 @@ function animate(){
 
   if (pulsingMesh && pulsingMesh.userData.originalScale) {
     const elapsed = (performance.now() - pulsingMesh.userData.pulseStart) / 1000;
-    const factor = 1 + 0.05 * Math.sin(elapsed * Math.PI * 2);
+    const factor = 1 + 0.005 * Math.sin(elapsed * Math.PI * 2);
     const originalScale = pulsingMesh.userData.originalScale;
     pulsingMesh.scale.set(
       originalScale.x * factor,
